@@ -12,7 +12,7 @@ const getCat = () => {
         catsFacts.push(element.text);
       });
       resolve(catsFacts);
-    }).catch(fail => resolve(null));
+    }).catch(camarchepas => resolve(null));
   });
 }
 
@@ -22,37 +22,34 @@ const getFox = () => {
     .then(res => {
       resolve(res.data.image)
     })
-    .catch(fail => resolve(null));
+    .catch(camarchepas => resolve(null));
   });
 }
 
-const getDayOffByCountry = (code ) => {
+const getDayOffByCountry = (countryCode ) => {
   return new Promise(resolve => {
-    axios.get(`https://date.nager.at/api/v2/PublicHolidays/2021/${code}`)
+    axios.get(`https://date.nager.at/api/v2/PublicHolidays/2021/${countryCode}`)
     .then(res => {
       resolve(res.data)
     })
-    .catch(fail => {
-      resolve("null");
-      console.log(fail)
+    .catch(camarchepas => {
+      resolve(null);
     });
   });
 };
 
-const getAll = async(code) => {
-  console.log('le code est : ' + code)
-  const dayOffByCountry = await getDayOffByCountry(code);
-  const fox = await getFox();
-  const cat = await getCat();
-  return Promise.all([cat, fox, dayOffByCountry]).then(() => {
+const getAll = async(countryCode) => {
+  const holidays = await getDayOffByCountry(countryCode);
+  const foxPicture = await getFox();
+  const catFacts = await getCat();
+  return Promise.all([catFacts, foxPicture, holidays]).then(() => {
     return{
-      fox, cat, dayOffByCountry
+      foxPicture, catFacts, holidays
     }
   })
 }
 
 app.post('/', async (req, res) => {
-  console.log("ntm " +req.body.countryCode);
   return getAll(req.body.countryCode);
 });
 
