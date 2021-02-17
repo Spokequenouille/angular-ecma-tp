@@ -1,3 +1,5 @@
+//Antoine Schulz
+
 import fastify from 'fastify';
 // see axios doc on how to use it
 import axios from 'axios';
